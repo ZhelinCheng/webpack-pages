@@ -5,20 +5,29 @@
 
 'use strict'
 import '@less/index.less'
-// import '@babel/polyfill'
+import '@babel/polyfill'
 
+require([
+  '../rely/urlParams'
+], function (urlParams) {
+  const input = document.getElementById('index')
+  input.value = urlParams.get('test')
+})
+
+
+/*
 let test = 10
 function f () {
+  const input = document.getElementById('index')
   console.log(test)
-  console.log(2311)
+  console.log(input.value)
 
-  let up = require('../rely/urlParams')
-
-  test = up.get('_ijt')
-  console.log(test)
+  const up = require('../rely/urlParams')
+  input.value = up.get('test')
 }
 
 f()
+*/
 
 /*
 function timeout () {

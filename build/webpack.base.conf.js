@@ -4,10 +4,13 @@
  */
 
 'use strict'
+const path = require('path')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const {initConfig, resolve} = require('./bundle')
 const initLoader = require('./loaders')
+const SpritesmithPlugin = require('webpack-spritesmith');
+
 
 const config = {
   devtool: 'cheap-module-source-map',
@@ -17,7 +20,7 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.json', '.ts'],
-    mainFields: ['jsnext:main', 'browser', 'main']
+    mainFields: ['browser', 'module', 'main']
   },
   plugins: [
     new CleanWebpackPlugin({
@@ -28,7 +31,42 @@ const config = {
       from: resolve('public'),
       to: resolve('dist'),
       ignore: ['*.html']
-    }])
+    }]),
+    new SpritesmithPlugin({
+      src: {
+        cwd: resolve('src/icon'),
+        glob: '*.png'
+      },
+      target: {
+        image: resolve('src/images/icon.png'),
+        css: [[resolve('src/less/icon.less'), {
+          format: 'function_based_template'
+        }]]
+      },
+      customTemplates: {
+        'function_based_template': path.resolve(__dirname, './icon_handlebars_template.handlebars')
+      },
+      apiOptions: {
+        cssImageRef: `../images/icon.png?t=${new Date().getTime()}`,
+        handlebarsHelpers: {
+          nameHandle (name) {
+            let iconName = /^icon/img.test(name) ? name : 'icon-' + name;
+            return /_?hover$/img.test(iconName) ? iconName.replace(/_?hover$/img, ':hover') : iconName;
+          },
+          zeroHandle (val) {
+            val = parseInt(val);
+            if (val === 0) {
+              return 0
+            } else {
+              return val + 'px'
+            }
+          }
+        }
+      },
+      spritesmithOptions: {
+        algorithm: 'binary-tree'
+      }
+    })
   ]
 }
 

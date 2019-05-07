@@ -18,11 +18,18 @@ module.exports = new Promise((rsl) => {
     devServer: {
       contentBase: resolve('dist'),
       port: '8080',
-      host: '0.0.0.0'
+      host: '0.0.0.0',
+      // hot: true,
+      // compress: true,
+      noInfo: true,
+      overlay: {
+        errors: true
+      }
     },
     plugins: [
       //热更新
-      new webpack.HotModuleReplacementPlugin()
+      // new webpack.NamedModulesPlugin(),
+      // new webpack.HotModuleReplacementPlugin()
     ]
   })
 

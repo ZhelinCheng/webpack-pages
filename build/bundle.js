@@ -39,7 +39,7 @@ function resolveAlias () {
 // 输出文件名配置
 function resolveEntryAndOutput () {
   entryFiles.forEach(dir => {
-    entry[dir.replace(/\.js$/, '')] =  resolve(`${entryDir}/${dir}`)
+    entry[dir.replace(/\.js$/, '')] = [resolve('src/global'), resolve(`${entryDir}/${dir}`)]
     if (process.env.NODE_ENV === 'development') {
       output.filename = 'js/[name].bundle.js'
     } else {
@@ -63,7 +63,7 @@ function combineHTMLWithTemplate () {
       new HTMLWebpackPlugin({
         filename: `${name}.html`,
         template: htmlPath,
-        chunks: [name, 'vendor']
+        chunks: [name, 'vendor', 'base', 'common']
       })
     )
   })

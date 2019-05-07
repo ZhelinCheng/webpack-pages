@@ -7,6 +7,8 @@
 
 const alias = {
   "@": "src",
+  "@js": "src/js",
+  "@rely": "src/js/rely",
   "@less": "src/less",
   "@util":"src/util",
   "@assets":"src/assets",

@@ -8,37 +8,11 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const Autoprefixer = require('autoprefixer')
-const AutoprefixerConfig = {
-  browsers: ['> 1%', 'last 4 versions', 'not ie <= 8']
-}
 
 module.exports = function () {
   let loaders = [
     {
-      test: /\.css$/,
-      use: [
-        {
-          loader: process.env.NODE_ENV === 'production' ? MiniCssExtractPlugin.loader : 'style-loader'
-        },
-        {
-          loader: 'css-loader',
-          options: {
-            modules: true
-          }
-        },
-        {
-          loader: 'postcss-loader',
-          options: {
-            sourceMap: true,
-            plugins: [
-              Autoprefixer(AutoprefixerConfig)
-            ]
-          }
-        }
-      ]
-    },
-    {
-      test: /\.less$/,
+      test: /\.(le|c)ss$/,
       use: [
         {
           loader: process.env.NODE_ENV === 'production' ? MiniCssExtractPlugin.loader : 'style-loader'
@@ -60,7 +34,7 @@ module.exports = function () {
           options: {
             sourceMap: true,
             plugins: [
-              Autoprefixer(AutoprefixerConfig)
+              Autoprefixer()
             ]
           }
         }
@@ -74,6 +48,19 @@ module.exports = function () {
           presets: ['@babel/preset-env']
         }
       }
+    },
+    {
+      test: /\.(gif|jpg|png|bmp|eot|woff|woff2|ttf|svg)/,
+      use: [
+        {
+          loader: 'url-loader',
+          options: {
+            limit: 20,
+            outputPath: 'images',
+            name: process.env.NODE_ENV === 'production' ? '[name]_[hash:6].[ext]' : '[name].[ext]'
+          }
+        }
+      ]
     }
   ]
 

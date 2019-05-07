@@ -4,43 +4,32 @@
  */
 
 'use strict'
-import '@less/index.less'
-import '@babel/polyfill'
+import '@less/page/index.less'
 
-require([
-  '../rely/urlParams'
-], function (urlParams) {
-  const input = document.getElementById('index')
-  input.value = urlParams.get('test')
-})
+const urlParams = () => import('@rely/urlParams')
+
+let arr = [1, 2, 3]
 
 
-/*
-let test = 10
-function f () {
-  const input = document.getElementById('index')
-  console.log(test)
-  console.log(input.value)
+console.log(...arr)
 
-  const up = require('../rely/urlParams')
-  input.value = up.get('test')
-}
-
-f()
-*/
-
-/*
 function timeout () {
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve(100000)
-    }, 1000)
+      resolve('哈哈哈')
+    }, 3000)
   })
 }
 
 
-;(async function () {
+/*
+
+require([
+  '@rely/urlParams'
+], async function (urlParams) {
+  const input = document.getElementById('index')
   let data = await timeout()
-  console.log(data)
-}())
+  input.value = data + urlParams.get('_ijt')
+  console.log(1111111111)
+})
 */

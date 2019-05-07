@@ -4,6 +4,8 @@
  */
 
 'use strict'
+import '@less/page/test.less'
+
 function a () {
-  alert(111)
+  alert()
 }

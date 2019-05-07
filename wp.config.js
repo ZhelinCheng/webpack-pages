@@ -4,3 +4,11 @@
  */
 
 'use strict'
+
+module.exports = {
+  css: {
+    purify: true
+  },
+  devServer: {},
+  filenameHashing: true
+}

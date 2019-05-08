@@ -5,25 +5,22 @@
 'use strict'
 const path = require('path')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const PurgecssPlugin = require('purgecss-webpack-plugin')
 const webpackBaseFn = require('./webpack.base.conf')
 const webpackMerge = require('webpack-merge')
-const glob = require('glob');
-const PurifyCSSPlugin = require("purifycss-webpack");
+const glob = require('glob')
+const {wpConfig} = require('./bundle')
 
 function f () {
   const baseConfig = webpackBaseFn()
 
   return webpackMerge(baseConfig, {
     mode: 'production',
-    output: {
-      publicPath: './'
-    },
     optimization: {
       splitChunks: {
         chunks: 'async',
-        minSize: 30000,
+        minSize: 20000,
         maxSize: 0,
         minChunks: 2,
         maxAsyncRequests: 5,
@@ -42,7 +39,6 @@ function f () {
             // test: /[\\/]node_modules[\\/]/,
             minChunks: 2,
             priority: -10,
-            minSize: 2000,
             name: 'vendor',
             reuseExistingChunk: true
           },
@@ -63,33 +59,28 @@ function f () {
       },
       minimizer: [
         new UglifyJsPlugin({
-          sourceMap: true,
+          sourceMap: wpConfig.productionSourceMap,
           cache: true,
           parallel: true,
-
+          exclude: /\.min\.js$/,
           uglifyOptions: {
+            ie8: wpConfig.ie8,
             compress: {
-              // ie8: true,
               warnings: false,
               drop_debugger: false,
               drop_console: true
             }
           }
-        }),
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            safe: true
-          }
         })
       ]
     },
     plugins: [
-      new MiniCssExtractPlugin({
-        sourceMap: true,
-        filename: 'css/[name].bundle.[hash:6].css'
+      new CleanWebpackPlugin({
+        verbose: false,
+        dry: false
       }),
-      new PurifyCSSPlugin({
-        paths: glob.sync(path.join(__dirname, '../src/*.html')),
+      new PurgecssPlugin({
+        paths: glob.sync(path.join(__dirname, '../src/**/*'), {nodir: true})
       })
     ]
   })

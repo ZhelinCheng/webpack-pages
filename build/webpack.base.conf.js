@@ -4,13 +4,19 @@
  */
 
 'use strict'
+const fs = require('fs')
 const path = require('path')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const {initConfig, resolve} = require('./bundle')
+const {initConfig, assetsPath, resolve, wpConfig} = require('./bundle')
 const initLoader = require('./loaders')
-const SpritesmithPlugin = require('webpack-spritesmith');
+const SpritesmithPlugin = require('webpack-spritesmith')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const UglifyJS = require('uglify-js')
 
+// 判断是否进行public目录JS压缩
+const isPublicJsMin = process.env.NODE_ENV === 'production' && wpConfig.publicJsMin
 
 const config = {
   devtool: 'cheap-module-source-map',
@@ -22,16 +28,16 @@ const config = {
     extensions: ['.js', '.json', '.ts'],
     mainFields: ['browser', 'module', 'main']
   },
+  optimization: {
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {
+          safe: true
+        }
+      })
+    ],
+  },
   plugins: [
-    new CleanWebpackPlugin({
-      verbose: true,
-      dry: false
-    }),
-    new CopyWebpackPlugin([{
-      from: resolve('public'),
-      to: resolve('dist'),
-      ignore: ['*.html']
-    }]),
     new SpritesmithPlugin({
       src: {
         cwd: resolve('src/icon'),
@@ -50,11 +56,11 @@ const config = {
         cssImageRef: `../images/icon.png?t=${new Date().getTime()}`,
         handlebarsHelpers: {
           nameHandle (name) {
-            let iconName = /^icon/img.test(name) ? name : 'icon-' + name;
-            return /_?hover$/img.test(iconName) ? iconName.replace(/_?hover$/img, ':hover') : iconName;
+            let iconName = /^icon/img.test(name) ? name : 'icon-' + name
+            return /_?hover$/img.test(iconName) ? iconName.replace(/_?hover$/img, ':hover') : iconName
           },
           zeroHandle (val) {
-            val = parseInt(val);
+            val = parseInt(val)
             if (val === 0) {
               return 0
             } else {
@@ -66,8 +72,33 @@ const config = {
       spritesmithOptions: {
         algorithm: 'binary-tree'
       }
+    }),
+    new MiniCssExtractPlugin({
+      filename: assetsPath('css/[name].bundle.[hash:6].css')
     })
   ]
+}
+
+// 判断是否有静态资源目录
+if (fs.existsSync(resolve('public'))) {
+  config.plugins.push(
+    new CopyWebpackPlugin([{
+      from: resolve('public'),
+      to: resolve(`dist/${wpConfig.assetsDir}`),
+      ignore: ['*.html'],
+      transform (content, path) {
+        // 压缩static目录JS文件
+        if (isPublicJsMin && /\.js$/.test(path)) {
+          content = UglifyJS.minify(content.toString('utf-8'), {
+            warnings: true,
+            ie8: wpConfig.ie8,
+            exclude: /\.min\.js$/
+          }).code
+        }
+        return content
+      }
+    }])
+  )
 }
 
 module.exports = function () {

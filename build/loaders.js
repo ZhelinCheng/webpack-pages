@@ -8,6 +8,8 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const Autoprefixer = require('autoprefixer')
+const { assetsPath } = require('./bundle')
+const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = function () {
   let loaders = [
@@ -15,7 +17,10 @@ module.exports = function () {
       test: /\.(le|c)ss$/,
       use: [
         {
-          loader: process.env.NODE_ENV === 'production' ? MiniCssExtractPlugin.loader : 'style-loader'
+          loader: MiniCssExtractPlugin.loader,
+          options: {
+            sourceMap: true
+          }
         },
         {
           loader: 'css-loader',
@@ -45,22 +50,33 @@ module.exports = function () {
       use: {
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-env']
+          presets: ['@babel/preset-env'],
         }
       }
     },
     {
-      test: /\.(gif|jpg|png|bmp|eot|woff|woff2|ttf|svg)/,
-      use: [
-        {
-          loader: 'url-loader',
-          options: {
-            limit: 20,
-            outputPath: 'images',
-            name: process.env.NODE_ENV === 'production' ? '[name]_[hash:6].[ext]' : '[name].[ext]'
-          }
-        }
-      ]
+      test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      loader: 'url-loader',
+      options: {
+        limit: 1000,
+        name: assetsPath('img/[name].[hash:7].[ext]')
+      }
+    },
+    {
+      test: /\.(mp4|webm|ogg|mp3|wav|flac|aac|swf)(\?.*)?$/,
+      loader: 'url-loader',
+      options: {
+        limit: 1000,
+        name: assetsPath('media/[name].[hash:6].[ext]')
+      }
+    },
+    {
+      test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+      loader: 'url-loader',
+      options: {
+        limit: 1000,
+        name: assetsPath('fonts/[name].[hash:6].[ext]')
+      }
     }
   ]
 

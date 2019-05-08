@@ -3,33 +3,13 @@
  * Features:
  */
 
-'use strict'
+// 当前页面样式引用
 import '@less/page/index.less'
 
-const urlParams = () => import('@rely/urlParams')
+// 当前页面JS库引用
+import '@babel/polyfill'
+import urlParams from '../rely/urlParams'
 
-let arr = [1, 2, 3]
-
-
-console.log(...arr)
-
-function timeout () {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('哈哈哈')
-    }, 3000)
-  })
-}
-
-
-/*
-
-require([
-  '@rely/urlParams'
-], async function (urlParams) {
-  const input = document.getElementById('index')
-  let data = await timeout()
-  input.value = data + urlParams.get('_ijt')
-  console.log(1111111111)
+$(function () {
+  console.log(urlParams)
 })
-*/

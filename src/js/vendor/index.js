@@ -4,6 +4,8 @@
  */
 
 'use strict'
+import $ from 'jquery'
 
-import '@babel/polyfill'
-import 'jquery'
+
+
+window.$ = $

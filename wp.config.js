@@ -9,6 +9,9 @@ module.exports = {
   css: {
     purify: true
   },
-  devServer: {},
-  filenameHashing: true
+  assetsDir: 'assets',
+  publicPath: '/',
+  productionSourceMap: false,
+  publicJsMin: false,
+  filenameHashing: false
 }

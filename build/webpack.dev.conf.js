@@ -8,23 +8,18 @@ process.env.NODE_ENV = 'development'
 
 const webpack = require('webpack')
 const webpackMerge = require('webpack-merge')
-const {resolve} = require('./bundle')
 const webpackBaseFn = require('./webpack.base.conf')
+const portfinder = require('portfinder')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const { wpConfig } = require('./bundle')
 
-module.exports = new Promise((rsl) => {
+module.exports = new Promise((resolve, reject) => {
+  const { devServer } = wpConfig
   const baseConfig = webpackBaseFn()
-  const mainConfig = webpackMerge(baseConfig, {
+  const devWebpackConfig = webpackMerge(baseConfig, {
     mode: 'development',
     devServer: {
-      contentBase: resolve('dist'),
-      port: '8080',
-      host: '0.0.0.0',
-      // hot: true,
-      // compress: true,
-      noInfo: true,
-      overlay: {
-        errors: true
-      }
+      ...devServer
     },
     plugins: [
       //热更新
@@ -33,5 +28,25 @@ module.exports = new Promise((rsl) => {
     ]
   })
 
-  rsl(mainConfig)
+  portfinder.basePort = devServer.port
+  portfinder.getPort((err, port) => {
+    if (err) {
+      reject(err)
+    } else {
+      process.env.PORT = port
+      // add port to devServer config
+      devWebpackConfig.devServer.port = port
+
+      // Add FriendlyErrorsPlugin
+      devWebpackConfig.plugins.push(
+        new FriendlyErrorsPlugin({
+          compilationSuccessInfo: {
+            messages: [`Your application is running here: http://localhost:${port}`]
+          },
+          onErrors: undefined
+        })
+      )
+      resolve(devWebpackConfig)
+    }
+  })
 })

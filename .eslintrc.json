@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "amd": true
+        "amd": true,
+        "jquery": true
     },
     "extends": "standard",
     "globals": {
@@ -9,6 +10,7 @@
         "define": true
     },
     "parserOptions": {
+        "ecmaVersion": 6,
         "sourceType": "module"
     },
     "rules": {}

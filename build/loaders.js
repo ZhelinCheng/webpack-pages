@@ -9,7 +9,6 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const Autoprefixer = require('autoprefixer')
 const {assetsPath} = require('./bundle')
-const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = function () {
   let loaders = [

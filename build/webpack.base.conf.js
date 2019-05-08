@@ -53,7 +53,7 @@ const config = {
         'function_based_template': path.resolve(__dirname, './icon_handlebars_template.handlebars')
       },
       apiOptions: {
-        cssImageRef: `../images/icon.png?t=${new Date().getTime()}`,
+        cssImageRef: `../images/icon.png`,
         handlebarsHelpers: {
           nameHandle (name) {
             let iconName = /^icon/img.test(name) ? name : 'icon-' + name

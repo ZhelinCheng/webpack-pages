@@ -21,6 +21,7 @@ const templatePath = fs.readFileSync(path.resolve(__dirname, './tpl.html'))
 // 入口文件
 const entryFiles = fs.readdirSync(entryDir)
 
+const isDev = process.env.NODE_ENV === 'development'
 const
   entry = {},
   output = {},
@@ -77,7 +78,7 @@ function resolveEntryAndOutput () {
   entryFiles.forEach(dir => {
     entry[dir.replace(/\.js$/, '')] = [resolve('src/global'), resolve(`${entryDir}/${dir}`)]
 
-    output.filename = assetsPath('js/[name].bundle.[hash:6].js')
+    output.filename = assetsPath('js/[name].bundle.[contenthash:6].js')
     output.path = outputDir
     output.publicPath = config.publicPath || ''
   })
@@ -118,8 +119,14 @@ function initConfig () {
 function assetsPath (_path) {
   const assets = config.assetsDir || 'assets'
 
-  if (process.env.NODE_ENV === 'development' || !config.filenameHashing) {
-    _path = _path.replace(/\.\[hash(:\d+)?]/, '')
+  // 生产环境图片
+  if (!isDev && /^img/.test(_path)) {
+    return path.posix.join(assets, _path)
+  }
+
+  // 开发环境，hash关闭
+  if ((isDev || !config.filenameHashing)) {
+    _path = _path.replace(/\.\[[a-z]*hash(:\d+)?]/, '')
   }
 
   return path.posix.join(assets, _path)

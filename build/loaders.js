@@ -66,7 +66,7 @@ module.exports = function () {
       loader: 'url-loader',
       options: {
         limit: 1000,
-        name: assetsPath('img/[name].[hash:7].[ext]')
+        name: assetsPath('img/[name].[contenthash:6].[ext]')
       }
     },
     {
@@ -74,7 +74,7 @@ module.exports = function () {
       loader: 'url-loader',
       options: {
         limit: 1000,
-        name: assetsPath('media/[name].[hash:6].[ext]')
+        name: assetsPath('media/[name].[contenthash:6].[ext]')
       }
     },
     {
@@ -82,7 +82,7 @@ module.exports = function () {
       loader: 'url-loader',
       options: {
         limit: 1000,
-        name: assetsPath('fonts/[name].[hash:6].[ext]')
+        name: assetsPath('fonts/[name].[contenthash:6].[ext]')
       }
     }
   ]

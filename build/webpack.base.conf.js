@@ -74,7 +74,7 @@ const config = {
       }
     }),
     new MiniCssExtractPlugin({
-      filename: assetsPath('css/[name].bundle.[hash:6].css')
+      filename: assetsPath('css/[name].bundle.[contenthash:6].css')
     })
   ]
 }

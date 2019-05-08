@@ -1,6 +1,21 @@
 # webpack-pages
 
-# IE8兼容
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+
+
+## 起步
+
+开发：
+```
+npm run dev
+```
+
+构建：
+```
+npm run build
+```
+
+## IE8兼容
 
 配置wp.config.js的ie8属性：
 ```

@@ -8,8 +8,5 @@ import '@less/page/index.less'
 
 // 当前页面JS库引用
 import '@babel/polyfill'
-import urlParams from '../rely/urlParams'
 
-$(function () {
-  console.log(urlParams)
-})
+$(function () {})

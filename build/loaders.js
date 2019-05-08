@@ -8,7 +8,7 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const Autoprefixer = require('autoprefixer')
-const { assetsPath } = require('./bundle')
+const {assetsPath} = require('./bundle')
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = function () {
@@ -47,12 +47,20 @@ module.exports = function () {
     },
     {
       test: /\.js$/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env'],
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        },
+        {
+          loader: 'eslint-loader',
+          options: {
+            cache: true
+          }
         }
-      }
+      ]
     },
     {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

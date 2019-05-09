@@ -11,7 +11,6 @@ const {initConfig, assetsPath, resolve, wpConfig} = require('./bundle')
 const initLoader = require('./loaders')
 const SpritesmithPlugin = require('webpack-spritesmith')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const PurgecssPlugin = require('purgecss-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJS = require('uglify-js')
 

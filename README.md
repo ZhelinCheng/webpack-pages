@@ -2,6 +2,7 @@
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
+仅用于普通多页面网页开发，如若使用前端框架，请使用相应的cli工具。
 
 ## 起步
 

@@ -7,7 +7,6 @@
 
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const Autoprefixer = require('autoprefixer')
 const {assetsPath} = require('./bundle')
 
 module.exports = function () {
@@ -36,10 +35,7 @@ module.exports = function () {
         {
           loader: 'postcss-loader',
           options: {
-            sourceMap: true,
-            plugins: [
-              Autoprefixer()
-            ]
+            sourceMap: true
           }
         }
       ]

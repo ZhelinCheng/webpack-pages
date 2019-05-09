@@ -22,7 +22,7 @@ function f () {
         chunks: 'async',
         minSize: 20000,
         maxSize: 0,
-        minChunks: 2,
+        minChunks: 1,
         maxAsyncRequests: 5,
         maxInitialRequests: 3,
         automaticNameDelimiter: '~',
@@ -35,9 +35,9 @@ function f () {
             priority: -10
           },*/
           vendors: {
-            chunks: 'all',
+            chunks: 'initial',
             // test: /[\\/]node_modules[\\/]/,
-            minChunks: 2,
+            minChunks: 1,
             priority: -10,
             name: 'vendor',
             reuseExistingChunk: true

@@ -13,5 +13,5 @@ module.exports = {
   publicPath: '/',
   productionSourceMap: false,
   publicJsMin: false,
-  filenameHashing: false
+  filenameHashing: false,
 }

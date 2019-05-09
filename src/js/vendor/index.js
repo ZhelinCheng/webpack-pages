@@ -4,6 +4,6 @@
  */
 /* eslint-disable */
 require('expose-loader?$!expose-loader?jQuery!jquery')
-require('expose-loader?layer!../rely/layer')
-require('@/css/layer.css')
+// require('expose-loader?layer!../rely/layer')
+// require('@/css/layer.css')
 // require('jquery')

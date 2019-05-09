@@ -6,6 +6,6 @@
 // 当前页面样式引用
 import '@less/page/index.less'
 
-$(function () {
-  layer.msg(11111)
-})
+document.getElementById('test').innerText = navigator.userAgent
+
+// layer.msg('111111')

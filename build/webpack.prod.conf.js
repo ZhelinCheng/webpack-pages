@@ -15,6 +15,15 @@ const {wpConfig} = require('./bundle')
 function f () {
   const baseConfig = webpackBaseFn()
 
+  // 判断是否删除冗余css
+  if (wpConfig.css.purify) {
+    baseConfig.plugins.push(
+      new PurgecssPlugin({
+        paths: glob.sync(path.join(__dirname, '../src/**/*'), {nodir: true})
+      })
+    )
+  }
+
   return webpackMerge(baseConfig, {
     mode: 'production',
     optimization: {
@@ -78,9 +87,6 @@ function f () {
       new CleanWebpackPlugin({
         verbose: false,
         dry: false
-      }),
-      new PurgecssPlugin({
-        paths: glob.sync(path.join(__dirname, '../src/**/*'), {nodir: true})
       })
     ]
   })

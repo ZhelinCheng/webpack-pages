@@ -47,15 +47,18 @@ let config = {
       errors: true
     }
   },
-  // 开发环境是否需要SourceMap
-  productionSourceMap: false,
+  // 生产环境是否需要SourceMap
+  productionSourceMap: true,
   // public目录JS是否需要SourceMap
-  publicSourceMap: false,
+  publicSourceMap: true,
   // 是否压缩public目录JS
-  publicJsMin: false,
+  publicJsMin: true,
   // 是否生成hash
   filenameHashing: true,
-  ie8: false
+  // 是否支持IE8
+  ie8: false,
+  // 是否使用shim
+  shim: ''
 }
 
 if (fs.existsSync(resolve('wp.config.js'))) {
@@ -84,6 +87,27 @@ function resolveEntryAndOutput () {
   })
 }
 
+// shim处理函数
+function shimHandle (ie8, shim) {
+  let html = ''
+
+  // ie8 没有配置shim
+  if (ie8 && !shim) {
+    return `<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js" type="text/javascript"></script>`
+  }
+
+  // 配置了shim
+  if (shim) {
+    let shimArr = shim instanceof Array ? shim : [shim]
+    for (let item of shimArr) {
+      html += `<script src="${item}" type="text/javascript"></script>\n`
+    }
+  }
+
+  return html
+}
+
+
 // HTML模板配置
 function combineHTMLWithTemplate () {
   entryFiles.forEach(dir => {
@@ -96,9 +120,11 @@ function combineHTMLWithTemplate () {
 
     htmlPlugins.push(
       new HTMLWebpackPlugin({
+        title: 'Custom template',
         filename: `${name}.html`,
         template: htmlPath,
-        chunks: [name, 'vendor', 'base', 'common']
+        chunks: [name, 'vendor', 'base', 'common'],
+        SHIM: shimHandle(config.ie8, config.shim)
       })
     )
   })

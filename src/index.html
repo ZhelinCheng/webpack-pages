@@ -18,6 +18,7 @@
     <title>Title</title>
 </head>
 <body>
+<div id="test"></div>
 <div class="content">
     <h1><center>专题/活动脚手架——webpack-pages</center></h1>
     <p>- 基于Webpack4、babel7</p>
@@ -27,6 +28,6 @@
         需要注意的是：公共JS及样式的提取并不是以这个目录为依据的，只要是公共代码，不论你写在哪里，都会被提取。
     </p>
 </div>
-
+<%= htmlWebpackPlugin.options.SHIM %>
 </body>
 </html>

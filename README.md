@@ -38,7 +38,7 @@ npm install jquery@1.12.4
 }
 ```
 
-安装相关依赖（可以不用安装core-js，使用es5-shim.js代替）：
+安装相关依赖：
 ```
 npm i @babel/plugin-transform-modules-commonjs @babel/plugin-transform-runtime -D
 ```
@@ -75,7 +75,7 @@ npm i @babel/plugin-transform-modules-commonjs @babel/plugin-transform-runtime -
 
 webpack在打包时并不会主动去支持ES3，上面的配置基本完成了语法层面的兼容，下面时完成api层面的兼容。
 
-首先我们遇到的时bind方法的不支持，也是webpack打包后我遇到的第一个不支持的api，我们可以使用 [es5-shim](https://www.npmjs.com/package/es5-shim)完成兼容操作。
+首先我们遇到的是bind方法的不支持，也是webpack打包后我遇到的第一个不支持的api，我们可以使用 [es5-shim](https://www.npmjs.com/package/es5-shim)完成兼容操作。
 
 ```
 <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
@@ -89,7 +89,7 @@ webpack在打包时并不会主动去支持ES3，上面的配置基本完成了�
 }
 ```
 
-这会替换掉默认的兼容代码，这个路径随你怎么写，脚手架会自动在html顶部生产一个script标签，并指向你配置的路径。如果你未开启ie8支持，也配置了该属性，那么页面也会置入。
+这会替换掉默认的兼容代码，这个路径随你怎么写，脚手架会自动在html底部产生script标签，并指向你配置的路径。如果你未开启ie8支持，也配置了该属性，那么页面也会置入。
 
 ### 其他方案
 

@@ -6,6 +6,8 @@
 // 当前页面样式引用
 import '@less/page/index.less'
 
-document.getElementById('test').innerText = navigator.userAgent
+$(function () {
+  document.getElementById('ua').innerText = navigator.userAgent
+  layer.msg('webpack-pages')
+})
 
-// layer.msg('111111')

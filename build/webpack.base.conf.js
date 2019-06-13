@@ -89,7 +89,7 @@ if (fs.existsSync(resolve('public'))) {
         // 压缩static目录JS文件
         if (isPublicJsMin && /\.js$/.test(path)) {
           content = UglifyJS.minify(content.toString('utf-8'), {
-            warnings: true,
+            // warnings: true,
             ie8: wpConfig.ie8,
             exclude: /\.min\.js$/
           }).code

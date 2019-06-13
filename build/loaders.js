@@ -12,7 +12,9 @@ const {assetsPath} = require('./bundle')
 module.exports = function () {
   let loaders = [
     {
-      test: /\.(le|c)ss$/,
+      test: /\.less$/,
+      exclude: /node_modules/,
+      include: path.resolve(__dirname, '../src'),
       use: [
         {
           loader: MiniCssExtractPlugin.loader,
@@ -23,7 +25,7 @@ module.exports = function () {
         {
           loader: 'css-loader',
           options: {
-            sourceMap: true
+            sourceMap: true,
           }
         },
         {
@@ -41,7 +43,30 @@ module.exports = function () {
       ]
     },
     {
+      test: /\.css$/,
+      include: [
+        path.resolve(__dirname, '../src'),
+        path.resolve(__dirname, '../node_modules'),
+      ],
+      use: [
+        {
+          loader: MiniCssExtractPlugin.loader,
+          options: {
+            sourceMap: true
+          }
+        },
+        {
+          loader: 'css-loader',
+          options: {
+            sourceMap: true,
+          }
+        }
+      ]
+    },
+    {
       test: /\.js$/,
+      exclude: /node_modules/,
+      include: path.resolve(__dirname, '../src'),
       use: [
         {
           loader: 'babel-loader',
@@ -66,7 +91,7 @@ module.exports = function () {
       }
     },
     {
-      test: /\.(mp4|webm|ogg|mp3|wav|flac|aac|swf)(\?.*)?$/,
+      test: /\.(mp4|webm|ogg|mp3|wav|flac|aac|swf|flv)(\?.*)?$/,
       loader: 'url-loader',
       options: {
         limit: 1000,
@@ -83,11 +108,13 @@ module.exports = function () {
     }
   ]
 
-  return loaders.map((item) => {
+  /*return loaders.map((item) => {
     return {
       ...item,
       exclude: /node_modules/,
       include: path.resolve(__dirname, '../src')
     }
-  })
+  })*/
+
+  return loaders
 }

@@ -12,6 +12,6 @@ module.exports = {
   assetsDir: 'assets',
   publicPath: '/',
   productionSourceMap: false,
-  publicJsMin: false,
-  filenameHashing: false,
+  publicJsMin: true,
+  filenameHashing: false
 }

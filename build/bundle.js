@@ -8,6 +8,7 @@
 const fs = require('fs')
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 const alias = require('./alias')
 const resolve = (p) => path.resolve(__dirname, '..', p)
 const webpackMerge = require('webpack-merge')
@@ -58,7 +59,9 @@ let config = {
   // 是否支持IE8
   ie8: false,
   // 是否使用shim
-  shim: ''
+  shim: '',
+  // 给script标签添加熟悉
+  defaultAttribute: 'defer'
 }
 
 if (fs.existsSync(resolve('wp.config.js'))) {
@@ -125,6 +128,12 @@ function combineHTMLWithTemplate () {
         template: htmlPath,
         chunks: [name, 'vendor', 'base', 'common'],
         SHIM: shimHandle(config.ie8, config.shim)
+      })
+    )
+
+    config.defaultAttribute && htmlPlugins.push(
+      new ScriptExtHtmlWebpackPlugin({
+        defaultAttribute: config.defaultAttribute
       })
     )
   })

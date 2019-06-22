@@ -87,11 +87,10 @@ if (fs.existsSync(resolve('public'))) {
       ignore: ['*.html', '.gitkeep'],
       transform (content, path) {
         // 压缩static目录JS文件
-        if (isPublicJsMin && /\.js$/.test(path)) {
+        if (isPublicJsMin && /\.js$/.test(path) && path.indexOf('min.js') < 0) {
           content = UglifyJS.minify(content.toString('utf-8'), {
-            // warnings: true,
-            ie8: wpConfig.ie8,
-            exclude: /\.min\.js$/
+            warnings: true,
+            ie8: wpConfig.ie8
           }).code
         }
         return content

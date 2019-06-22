@@ -75,7 +75,7 @@ function f () {
           uglifyOptions: {
             ie8: wpConfig.ie8,
             compress: {
-              warnings: false,
+              // warnings: false,
               drop_debugger: false,
               drop_console: true
             }

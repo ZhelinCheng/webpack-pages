@@ -4,28 +4,36 @@
  */
 
 'use strict'
-process.env.NODE_ENV = 'development'
+const path = require('path')
 
-const webpack = require('webpack')
-const webpackMerge = require('webpack-merge')
-const webpackBaseFn = require('./webpack.base.conf')
+const { merge } = require('webpack-merge')
+const baseConfFunc = require('./webpack.base.conf')
 const portfinder = require('portfinder')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const { wpConfig } = require('./bundle')
 
+process.env.NODE_ENV = 'development'
+
 module.exports = new Promise((resolve, reject) => {
   const { devServer } = wpConfig
-  const baseConfig = webpackBaseFn()
-  const devWebpackConfig = webpackMerge(baseConfig, {
+  const baseConf = baseConfFunc()
+  const devWebpackConfig = merge(baseConf, {
     mode: 'development',
-    devServer: {
-      ...devServer
+    devtool: 'inline-source-map',
+    devServer,
+    /* devServer: {
+      contentBase: path.resolve(__dirname, '../dist'),
     },
     plugins: [
-      //热更新
-      // new webpack.NamedModulesPlugin(),
-      // new webpack.HotModuleReplacementPlugin()
-    ]
+      new HtmlWebpackPlugin({
+        title: 'Development',
+      }),
+    ], */
+    /* output: {
+      filename: '[name].bundle.js',
+      path: path.resolve(__dirname, '../dist'),
+      clean: true,
+    }, */
   })
 
   portfinder.basePort = devServer.port
@@ -41,11 +49,14 @@ module.exports = new Promise((resolve, reject) => {
       devWebpackConfig.plugins.push(
         new FriendlyErrorsPlugin({
           compilationSuccessInfo: {
-            messages: [`Your application is running here: http://localhost:${port}`]
+            messages: [
+              `Your application is running here: http://localhost:${port}`,
+            ],
           },
-          onErrors: undefined
+          onErrors: undefined,
         })
       )
+     
       resolve(devWebpackConfig)
     }
   })

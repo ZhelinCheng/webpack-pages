@@ -9,8 +9,10 @@
     ]
   ],
   "plugins": [
-    [
-      "@babel/plugin-syntax-dynamic-import"
-    ]
+    ["@babel/plugin-syntax-dynamic-import"],
+    ["@babel/plugin-transform-react-jsx", {
+      "runtime": "automatic",
+      "importSource": "custom-jsx-library"
+    }]
   ]
 }

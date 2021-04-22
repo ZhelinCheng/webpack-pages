@@ -8,19 +8,22 @@
 const fs = require('fs')
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+// const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 const alias = require('./alias')
 const resolve = (p) => path.resolve(__dirname, '..', p)
-const webpackMerge = require('webpack-merge')
+const ejs = require('ejs')
+const glob = require('glob')
+const { merge } = require('webpack-merge')
 
 // 入口目录
-const entryDir = resolve('src/js/page')
+const entryDir = resolve('src/pages')
 // 输出目录
 const outputDir = resolve('dist')
 // 基础HTML模板
-const templatePath = fs.readFileSync(path.resolve(__dirname, './tpl.html'))
+const templatePath = fs.readFileSync(path.resolve(__dirname, '../src/document.ejs'))
 // 入口文件
-const entryFiles = fs.readdirSync(entryDir)
+const entryFiles = glob.sync(`${entryDir}/**/*.+(t|j)s`)
+
 
 const isDev = process.env.NODE_ENV === 'development'
 const
@@ -38,10 +41,10 @@ let config = {
   assetsDir: 'assets',
   // 代理服务器
   devServer: {
-    contentBase: resolve('dev'),
+    contentBase: resolve('div'),
     port: '8080',
     host: '0.0.0.0',
-    // hot: true,
+    hot: true,
     // compress: true,
     noInfo: true,
     overlay: {
@@ -64,11 +67,6 @@ let config = {
   defaultAttribute: 'defer'
 }
 
-if (fs.existsSync(resolve('wp.config.js'))) {
-  let userConfig = require('../wp.config')
-  config = webpackMerge(config, userConfig)
-}
-
 exports.wpConfig = config
 
 // 设置别名
@@ -79,14 +77,27 @@ function resolveAlias () {
   })
 }
 
+function getPageName (filePath) {
+  const dirs = filePath.split(/\\|\//) || []
+  const len = dirs.length
+  const dir = dirs[len - 1]
+
+  // const isFile = /\.(j|t)s$/.test(dir)
+  const isIndex = /^index\.(j|t)sx?/.test(dir)
+  const fileName = dir.replace(/\.(j|t)sx?/i, '')
+
+  return isIndex ? dirs[len - 2] : fileName
+}
+
 // 输出文件名配置
 function resolveEntryAndOutput () {
-  entryFiles.forEach(dir => {
-    entry[dir.replace(/\.js$/, '')] = [resolve('src/global'), resolve(`${entryDir}/${dir}`)]
+  entryFiles.forEach(filePath => {
+    entry[getPageName(filePath)] = filePath
 
     output.filename = assetsPath('js/[name].bundle.[contenthash:6].js')
     output.path = outputDir
     output.publicPath = config.publicPath || ''
+    output.clean = true
   })
 }
 
@@ -113,12 +124,12 @@ function shimHandle (ie8, shim) {
 
 // HTML模板配置
 function combineHTMLWithTemplate () {
-  entryFiles.forEach(dir => {
-    const name = dir.replace(/\.js$/, '')
-    const htmlPath = resolve(`src/${name}.html`)
+  entryFiles.forEach(filePath => {
+    const name = getPageName(filePath)
+    const htmlPath = resolve(`src/pages/${name}/index.html`)
 
     if (!fs.existsSync(htmlPath)) {
-      fs.writeFileSync(htmlPath, templatePath)
+      fs.writeFileSync(htmlPath, ejs.render(templatePath.toString('utf-8'), {}, {}))
     }
 
     htmlPlugins.push(
@@ -127,15 +138,15 @@ function combineHTMLWithTemplate () {
         filename: `${name}.html`,
         template: htmlPath,
         chunks: [name, 'vendor', 'base', 'common'],
-        SHIM: shimHandle(config.ie8, config.shim)
+        // SHIM: shimHandle(config.ie8, config.shim)
       })
     )
 
-    config.defaultAttribute && htmlPlugins.push(
+    /* config.defaultAttribute && htmlPlugins.push(
       new ScriptExtHtmlWebpackPlugin({
         defaultAttribute: config.defaultAttribute
       })
-    )
+    ) */
   })
 }
 
@@ -167,7 +178,8 @@ function assetsPath (_path) {
   return path.posix.join(assets, _path)
 }
 
-exports.assetsPath = assetsPath
+// resolveEntryAndOutput()
 
+exports.assetsPath = assetsPath
 exports.initConfig = initConfig
 exports.resolve = resolve

@@ -18,9 +18,6 @@ module.exports = function () {
       use: [
         {
           loader: MiniCssExtractPlugin.loader,
-          options: {
-            sourceMap: true
-          }
         },
         {
           loader: 'css-loader',
@@ -51,9 +48,6 @@ module.exports = function () {
       use: [
         {
           loader: MiniCssExtractPlugin.loader,
-          options: {
-            sourceMap: true
-          }
         },
         {
           loader: 'css-loader',
@@ -64,14 +58,14 @@ module.exports = function () {
       ]
     },
     {
-      test: /\.js$/,
+      test: /\.jsx?$/,
       exclude: /node_modules/,
       include: path.resolve(__dirname, '../src'),
       use: [
         {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            sourceMap: true,
           }
         },
         {
@@ -83,6 +77,22 @@ module.exports = function () {
       ]
     },
     {
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      include: path.resolve(__dirname, '../src'),
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            sourceMap: true,
+          }
+        },
+        {
+          loader: 'ts-loader'
+        }
+      ]
+    },
+    /* {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
       loader: 'url-loader',
       options: {
@@ -105,7 +115,7 @@ module.exports = function () {
         limit: 1000,
         name: assetsPath('fonts/[name].[contenthash:6].[ext]')
       }
-    }
+    } */
   ]
 
   /*return loaders.map((item) => {
